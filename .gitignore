@@ -8,3 +8,4 @@ __pycache__/
 .claude/settings.local.json
 ponte.log
 saude/
+gas/_definir.gs
