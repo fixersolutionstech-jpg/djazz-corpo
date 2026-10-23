@@ -33,7 +33,9 @@ ponte.py sincronizar (tarefa diária) → The DJAZZ\Corpo\Corpo.xlsx + Resumo_se
 - [x] Repositório público `fixersolutionstech-jpg/djazz-corpo` + Pages: https://fixersolutionstech-jpg.github.io/djazz-corpo/ (2026-10-23)
 - [x] Sheet "DJazz — Corpo" + script ligado criados com `clasp create-script` (`.clasp.json` local; o clasp substitui `gas/appsscript.json` ao criar: repor do Git)
 - [ ] `clasp push --force` (bloqueado no terminal do Claude: o Rei corre), Propriedades `TOKEN` (já no `.env`) e `GEMINI_KEY`, `autorizar()`, implementação → URL no `.env` e na PWA
-- [ ] Mi Fitness → Health Connect → exportação CSV (testar app; adaptar `ler_csv_saude` ao formato real)
+- [x] Passos: o Rei não tem relógio nem Mi Fitness (Redmi Note 10S, Android 11). Termux `termux/passos-djazz.sh` lê o contador do hardware (3 leituras: a 1.ª vem `{}`), soma diferenças (reinício = contador volta a 0) e envia `passos-AAAA-MM-DD` (o GAS actualiza o valor). Job 1 de hora a hora desde 2026-10-23 (Job 0 = SMS do Organic; mesmo id substitui). Depois de cada `curl` do script: `chmod +x`. Config no telemóvel em `~/djazz/config.sh` (veio de `termux/djazz-config.sh`, fora do Git)
+- [ ] Confirmar que os passos sobem na Sheet ao longo do dia (a 23/10 só chegou o 0 inicial)
+- [ ] Relógio/CSV (`ponte.py saude`) só se o Rei tiver relógio no futuro
 - [ ] Tarefa agendada "DJazz ponte" (`sincronizar.cmd`)
 - [x] `The DJAZZ\CLAUDE.md`: secção "REGISTOS DO CORPO" aponta para `Corpo/Resumo_semana.md` (2026-10-23)
 - [x] Implementação @1 a funcionar (registar/corrigir/apagar/saude/foto + Gemini testados 2026-10-23); `.env` com GAS_URL e TOKEN. Não editar código no editor do Apps Script (o push do PC sobrepõe)
