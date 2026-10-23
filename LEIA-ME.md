@@ -22,7 +22,7 @@
 3. `python ponte.py saude ficheiro.csv` (reenviar o mesmo ficheiro não duplica).
 
 ## 5. Passos do telemóvel (Termux, sem relógio)
-1. No Termux (já instalado para o Organic): `mkdir -p ~/djazz && curl -sL https://raw.githubusercontent.com/fixersolutionstech-jpg/djazz-corpo/main/termux/passos-djazz.sh -o ~/djazz/passos-djazz.sh`
+1. No Termux (já instalado para o Organic): `mkdir -p ~/djazz && curl -sL https://raw.githubusercontent.com/fixersolutionstech-jpg/djazz-corpo/main/termux/passos-djazz.sh -o ~/djazz/passos-djazz.sh && chmod +x ~/djazz/passos-djazz.sh` (o agendador precisa do `chmod +x`; repetir depois de cada `curl`)
 2. Cria `~/djazz/config.sh` com `GAS_URL` e `GAS_TOKEN` do DJazz (modelo em `termux/config.exemplo.sh`).
 3. Definições do Android → Apps → Termux:API → Permissões → **Actividade física** → Permitir.
 4. Testa: `termux-sensor -s step_counter -n 1` (anda uns passos) e depois `bash ~/djazz/passos-djazz.sh` duas vezes, com passos pelo meio.
