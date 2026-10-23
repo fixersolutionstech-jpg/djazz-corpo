@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.xlsx
+*.csv
+*.jpg
+*.jpeg
+.clasp.json
+.claude/settings.local.json
+ponte.log
+saude/

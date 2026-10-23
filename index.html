@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14100e">
+<title>DJazz Corpo</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14100e; --card:#1f1814; --card2:#271e19; --line:#3a2c24;
+  --tx:#f1e9e4; --mut:#a8968a; --ac:#ff8a3d; --ac2:#e0672a;
+  --ok:#7ed49a; --av:#e6c36a; --mal:#ef8a7a;
+  --r:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,sans-serif}
+body{padding:0 16px calc(96px + env(safe-area-inset-bottom));max-width:560px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 0 10px}
+header h1{font-size:20px;margin:0;letter-spacing:.5px}
+header h1 span{color:var(--ac)}
+#net{font-size:12px;color:var(--mut);display:flex;gap:6px;align-items:center}
+#net i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+#net.off i{background:var(--mal)}
+.view{display:none}.view.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:12px 0}
+label.l{display:block;font-size:12px;color:var(--mut);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.8px}
+.seg{display:flex;background:var(--card2);border-radius:12px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:none;color:var(--mut);padding:10px 2px;border-radius:9px;font:600 13px Inter}
+.seg button.on{background:var(--ac);color:#2a1206}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{border:1px solid var(--line);background:var(--card2);color:var(--tx);padding:8px 12px;border-radius:999px;font:500 14px Inter}
+.chips button.on{border-color:var(--ac);background:#3a2214;color:var(--ac)}
+input.t{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:12px;font:15px Inter;outline:none}
+input.t:focus{border-color:var(--ac2)}
+input.n{font:700 22px "JetBrains Mono",monospace;text-align:center}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+.btn{width:100%;border:0;border-radius:14px;padding:16px;font:700 16px Inter;margin-top:18px;background:var(--ac);color:#2a1206}
+.btn.sec{background:var(--card2);color:var(--tx);border:1px solid var(--line)}
+.btn.neg{background:none;color:var(--mal);border:1px solid #5a2f28}
+.btn.grande{padding:28px;font-size:20px}
+.btn:disabled{opacity:.5}
+nav{position:fixed;left:0;right:0;bottom:0;background:#0e0b09;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+nav .in{display:flex;max-width:560px;width:100%}
+nav button{flex:1;border:0;background:none;color:var(--mut);padding:12px 0 10px;font:600 12px Inter}
+nav button b{display:block;font-size:20px;margin-bottom:2px}
+nav button.on{color:var(--ac)}
+.meta{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.meta:last-child{border:0}
+.meta b{font-family:"JetBrains Mono",monospace}
+.meta b.ok{color:var(--ok)}.meta b.av{color:var(--av)}
+.reg{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.reg:last-child{border:0}
+.reg .d{font-size:12px;color:var(--mut);margin-top:3px}
+.reg .v{font:700 14px "JetBrains Mono",monospace;white-space:nowrap;color:var(--ac)}
+.reg .x{font-size:12px;color:var(--av)}
+.vazio{text-align:center;color:var(--mut);padding:30px 0}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:var(--tx);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center}
+#toast.on{opacity:1;transform:translateX(-50%)}
+.fila{font-size:13px;color:var(--av);margin-top:10px;display:none}
+.hint{font-size:12px;color:var(--mut);margin-top:6px}
+#edit{position:fixed;inset:0;background:#000a;display:none;align-items:flex-end;justify-content:center;z-index:5}
+#edit.on{display:flex}
+#edit .card{width:100%;max-width:560px;margin:0;border-radius:var(--r) var(--r) 0 0;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+</style>
+</head>
+<body>
+<header>
+  <h1>DJazz <span>Corpo</span></h1>
+  <div id="net"><i></i><span>online</span></div>
+</header>
+
+<!-- REGISTAR -->
+<section class="view on" id="v-reg">
+  <div class="seg" id="tipos"></div>
+  <div class="card" id="form"></div>
+  <div class="fila" id="fila"></div>
+  <input type="file" id="cam" accept="image/*" capture="environment" hidden>
+</section>
+
+<!-- SEMANA -->
+<section class="view" id="v-sem">
+  <div class="card">
+    <label class="l" style="margin-top:0">Esta semana</label>
+    <div id="metas"></div>
+    <p class="hint" id="sem-nota"></p>
+  </div>
+  <div class="card">
+    <label class="l" style="margin-top:0">Registos (toca para corrigir ou apagar)</label>
+    <div id="lista"></div>
+  </div>
+  <button class="btn sec" onclick="carregar(true)">Actualizar</button>
+</section>
+
+<!-- DEFINIÇÕES -->
+<section class="view" id="v-def">
+  <div class="card">
+    <label class="l" style="margin-top:0">URL do GAS (/exec)</label>
+    <input class="t" id="d-url" placeholder="https://script.google.com/macros/s/…/exec">
+    <label class="l">Token</label>
+    <input class="t" id="d-tok" type="password" placeholder="o mesmo TOKEN do Apps Script">
+    <label class="l">Exercícios (separados por vírgula)</label>
+    <input class="t" id="d-ex">
+    <label class="l">Medidas</label>
+    <input class="t" id="d-med">
+    <label class="l">Metas por semana: treinos · conversas novas</label>
+    <div class="row"><input class="t" id="d-mt" inputmode="numeric"><input class="t" id="d-mc" inputmode="numeric"></div>
+    <button class="btn" onclick="guardarDef()">Guardar</button>
+    <button class="btn sec" onclick="testar()">Testar ligação</button>
+    <p class="hint">Passos, sono e treinos do relógio chegam do Mi Fitness pelo PC. Aqui regista só o que o relógio não vê: séries, repetições, comida, medidas e conversas.</p>
+  </div>
+</section>
+
+<div id="edit"><div class="card" id="edit-c"></div></div>
+
+<nav><div class="in">
+  <button data-v="reg" class="on"><b>＋</b>Registar</button>
+  <button data-v="sem"><b>◎</b>Semana</button>
+  <button data-v="def"><b>⚙</b>Definições</button>
+</div></nav>
+
+<div id="toast"></div>
+
+<script>
+/* ---------- estado e definições ---------- */
+const DEF = {
+  url: '', token: '',
+  ex: ['Flexões', 'Agachamentos', 'Barra', 'Abdominais', 'Prancha', 'Dips', 'Corrida', 'Caminhada', 'Calistenia'],
+  med: ['Peso', 'Cintura', 'Altura', 'Peito', 'Braço'],
+  metaTreinos: 3, metaConversas: 3
+};
+const UNID = { Peso: 'kg', Altura: 'cm' }; // o resto das medidas em cm
+const MOMENTOS = ['Matabicho', 'Almoço', 'Lanche', 'Jantar'];
+const ls = {
+  get(k, d) { try { const v = localStorage.getItem('dj_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('dj_' + k, JSON.stringify(v)); } catch (e) {} }
+};
+let cfg = Object.assign({}, DEF, ls.get('cfg', {}));
+let regs = ls.get('cache', []);
+let fila = ls.get('fila', []);
+let tipo = 'treino';
+
+/* ---------- utilitários ---------- */
+const $ = s => document.querySelector(s);
+const hoje = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Africa/Maputo' });
+const hora = () => new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Maputo', hour: '2-digit', minute: '2-digit' });
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const dm = d => String(d || '').slice(8, 10) + '/' + String(d || '').slice(5, 7);
+const CONF = { alta: 'alta', media: 'média', baixa: 'baixa', corrigido: 'corrigida' };
+const num = s => { const n = Number(String(s ?? '').replace(/\s/g, '').replace(',', '.')); return String(s ?? '').trim() === '' || !isFinite(n) ? '' : n; };
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 2400); }
+function segunda(d) { const x = new Date(d + 'T12:00:00'); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x.toISOString().slice(0, 10); }
+
+/* ---------- API ---------- */
+async function api(body) {
+  if (!cfg.url) throw new Error('Configura o URL do GAS');
+  const r = await fetch(cfg.url, {
+    method: 'POST', redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS
+    body: JSON.stringify(Object.assign({ token: cfg.token }, body))
+  });
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.erro || 'erro');
+  return j;
+}
+async function apiGet() {
+  if (!cfg.url) throw new Error('Configura o URL do GAS');
+  const r = await fetch(cfg.url + '?acao=listar&dias=21&token=' + encodeURIComponent(cfg.token));
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.erro || 'erro');
+  return j;
+}
+
+/* ---------- formulários de registo ---------- */
+const NOMES = { treino: 'Treino', refeicao: 'Refeição', medida: 'Medida', social: 'Social' };
+function pintarTipos() {
+  $('#tipos').innerHTML = Object.keys(NOMES).map(t => `<button data-t="${t}" class="${t === tipo ? 'on' : ''}">${NOMES[t]}</button>`).join('');
+  $('#tipos').querySelectorAll('button').forEach(b => b.onclick = () => { tipo = b.dataset.t; pintarTipos(); montar(); });
+}
+const chips = (arr, sel) => `<div class="chips">${arr.map(c => `<button type="button" data-c="${esc(c)}" class="${c === sel ? 'on' : ''}">${esc(c)}</button>`).join('')}</div>`;
+const campoData = r => `<div class="row"><div><label class="l">Data</label><input class="t f-data" type="date" value="${esc(r.data)}"></div>
+  <div><label class="l">Hora</label><input class="t f-hora" type="time" value="${esc(r.hora)}"></div></div>`;
+
+/** Desenha o formulário do tipo actual em el; r = registo (novo ou a corrigir); fim(registo) ao guardar. */
+function formulario(el, t, r, fim, botoes) {
+  r = Object.assign({ tipo: t, data: hoje(), hora: hora(), item: '' }, r);
+  const v = k => esc(r[k] === undefined ? '' : r[k]);
+  const corpo = {
+    treino: `<label class="l" style="margin-top:0">Exercício</label>${chips(cfg.ex, r.item)}
+      <div class="row"><div><label class="l">Séries</label><input class="t n f-series" inputmode="numeric" value="${v('series')}"></div>
+      <div><label class="l">Reps/série</label><input class="t n f-reps" inputmode="numeric" value="${v('reps')}"></div>
+      <div><label class="l">Minutos</label><input class="t n f-duracao_min" inputmode="numeric" value="${v('duracao_min')}"></div></div>
+      <label class="l">Nota</label><input class="t f-descricao" placeholder="opcional (ex.: devagar, com peso)" value="${v('descricao')}">`,
+    refeicao: `<label class="l" style="margin-top:0">Refeição</label>${chips(MOMENTOS, r.item)}
+      <label class="l">O que comeste</label><input class="t f-descricao" placeholder="ex.: arroz, feijão, frango" value="${v('descricao')}">
+      <div class="row"><div><label class="l">Proteína (g, aprox.)</label><input class="t n f-proteina_g" inputmode="numeric" value="${v('proteina_g')}"></div>
+      <div><label class="l">kcal (aprox.)</label><input class="t n f-kcal" inputmode="numeric" value="${v('kcal')}"></div></div>
+      ${r.id ? '' : '<button type="button" class="btn sec b-foto">📷 Tirar foto (estima sozinho)</button>'}`,
+    medida: `<label class="l" style="margin-top:0">Medida</label>${chips(cfg.med, r.item)}
+      <label class="l">Valor <span class="f-un">${esc(r.unidade || UNID[r.item] || (r.item ? 'cm' : ''))}</span></label>
+      <input class="t n f-valor" inputmode="decimal" value="${v('valor')}">`,
+    social: `${r.id ? '' : '<button type="button" class="btn grande b-mais">+1 conversa nova</button>'}
+      <label class="l">Nota curta (sem nomes)</label><input class="t f-descricao" placeholder="ex.: no ginásio, durou 5 min" value="${v('descricao')}">`
+  }[t];
+  el.innerHTML = corpo + campoData(r) + `<div class="acoes">${botoes || '<button class="btn b-ok">Guardar</button>'}</div>`;
+  el.querySelectorAll('.chips button').forEach(b => b.onclick = () => {
+    r.item = b.dataset.c;
+    el.querySelectorAll('.chips button').forEach(x => x.classList.toggle('on', x === b));
+    const un = el.querySelector('.f-un'); if (un) un.textContent = UNID[r.item] || 'cm';
+  });
+  const ler = () => {
+    const o = Object.assign({}, r);
+    el.querySelectorAll('input.t').forEach(i => {
+      const k = [...i.classList].find(c => c.startsWith('f-')); if (!k) return;
+      const nome = k.slice(2);
+      o[nome] = i.classList.contains('n') ? num(i.value) : i.value.trim();
+    });
+    if (t === 'treino' && !o.item) return toast('Escolhe o exercício'), null;
+    if (t === 'treino' && o.reps === '' && o.duracao_min === '') return toast('Indica as reps ou os minutos'), null;
+    if (t === 'refeicao' && !o.item) return toast('Escolhe a refeição'), null;
+    if (t === 'refeicao' && !o.descricao) return toast('Diz o que comeste ou tira foto'), null;
+    if (t === 'medida' && (!o.item || o.valor === '' || o.valor <= 0)) return toast('Escolhe a medida e o valor'), null;
+    if (t === 'medida') o.unidade = UNID[o.item] || 'cm';
+    if (t === 'social') { o.item = 'Conversa nova'; o.valor = 1; }
+    return o;
+  };
+  const ok = el.querySelector('.b-ok'); if (ok) ok.onclick = () => { const o = ler(); if (o) fim(o); };
+  const mais = el.querySelector('.b-mais'); if (mais) mais.onclick = () => { const o = ler(); if (o) fim(o); };
+  const ft = el.querySelector('.b-foto'); if (ft) ft.onclick = () => {
+    if (!r.item) return toast('Escolhe primeiro a refeição');
+    const cam = $('#cam'); cam.value = '';
+    cam.onchange = () => cam.files[0] && enviarFoto(cam.files[0],
+      { item: r.item, data: el.querySelector('.f-data').value, hora: el.querySelector('.f-hora').value });
+    cam.click();
+  };
+  return ler;
+}
+
+function montar() {
+  formulario($('#form'), tipo, {}, o => {
+    o.id = uid(); o.tipo = tipo;
+    if (tipo === 'treino' && regs.some(x => x.tipo === 'saude' && x.data === o.data && /treino/i.test(x.item)))
+      toast('Atenção: o relógio já tem um treino hoje. Regista só séries e reps que ele não vê.');
+    guardar({ acao: 'registar', reg: o }, o);
+    toast(tipo === 'social' ? '+1 conversa ✓' : NOMES[tipo] + ' registado ✓');
+    montar();
+  });
+}
+
+/* ---------- foto da comida: reduz no telemóvel e envia ---------- */
+function reduzir(ficheiro, max = 1024) {
+  return new Promise((ok, mal) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(img.src);
+      ok(c.toDataURL('image/jpeg', 0.7).split(',')[1]);
+    };
+    img.onerror = mal;
+    img.src = URL.createObjectURL(ficheiro);
+  });
+}
+async function enviarFoto(f, r) {
+  try {
+    const imagem = await reduzir(f);
+    const o = { id: uid(), tipo: 'refeicao', data: r.data || hoje(), hora: r.hora || hora(), item: r.item, descricao: 'foto a analisar…', origem: 'foto', confianca: 'baixa' };
+    guardar({ acao: 'foto', id: o.id, data: o.data, hora: o.hora, item: o.item, imagem }, o);
+    toast('Foto enviada: a estimativa aparece na Semana');
+    montar();
+  } catch (e) { toast('Não consegui ler a foto'); }
+}
+
+/* ---------- fila offline (registos e fotos) ---------- */
+function guardar(pedido, local) {
+  fila.push(pedido); ls.set('fila', fila);
+  if (local) { regs.unshift(Object.assign({ estado: 'activo', origem: 'manual' }, local)); ls.set('cache', regs); pintarSemana(); }
+  enviarFila();
+}
+let aEnviar = false;
+async function enviarFila() {
+  mostrarFila();
+  if (aEnviar || !fila.length || !navigator.onLine || !cfg.url) return;
+  aEnviar = true;
+  let novidades = false;
+  try {
+    while (fila.length) {
+      await api(fila[0]); // o id torna o envio idempotente
+      novidades = novidades || fila[0].acao === 'foto';
+      fila.shift(); ls.set('fila', fila); mostrarFila();
+    }
+  } catch (e) { /* tenta mais tarde */ }
+  aEnviar = false;
+  mostrarFila();
+  if (novidades) carregar();
+}
+function mostrarFila() {
+  const f = $('#fila');
+  f.style.display = fila.length ? 'block' : 'none';
+  f.textContent = `⏳ ${fila.length} registo(s) à espera de envio — sai sozinho quando houver rede.`;
+}
+
+/* ---------- semana ---------- */
+function resumo(lista) {
+  const ini = segunda(hoje());
+  const sem = lista.filter(r => r.data >= ini && r.estado !== 'apagado');
+  const dias = t => new Set(sem.filter(r => r.tipo === t).map(r => r.data)).size;
+  const treinoRel = sem.filter(r => r.tipo === 'saude' && /treino/i.test(r.item)).map(r => r.data);
+  const diasTreino = new Set([...sem.filter(r => r.tipo === 'treino').map(r => r.data), ...treinoRel]).size;
+  const conversas = sem.filter(r => r.tipo === 'social').reduce((a, r) => a + (Number(r.valor) || 1), 0);
+  const ref = sem.filter(r => r.tipo === 'refeicao');
+  const prot = ref.filter(r => r.proteina_g !== '' && r.proteina_g != null);
+  const diasRef = dias('refeicao');
+  const ultima = item => lista.filter(r => r.tipo === 'medida' && r.item === item && r.estado !== 'apagado').sort((a, b) => (b.data + b.hora).localeCompare(a.data + a.hora))[0];
+  const passos = sem.filter(r => r.tipo === 'saude' && /passos/i.test(r.item));
+  return { ini, diasTreino, conversas, refeicoes: ref.length, diasRef,
+    proteinaDia: prot.length && diasRef ? Math.round(prot.reduce((a, r) => a + Number(r.proteina_g), 0) / diasRef) : null,
+    peso: ultima('Peso'), cintura: ultima('Cintura'),
+    passosDia: passos.length ? Math.round(passos.reduce((a, r) => a + Number(r.valor), 0) / new Set(passos.map(r => r.data)).size) : null };
+}
+function pintarSemana() {
+  const s = resumo(regs);
+  const linha = (nome, val, ok) => `<div class="meta"><span>${nome}</span><b class="${ok === undefined ? '' : ok ? 'ok' : 'av'}">${val}</b></div>`;
+  $('#metas').innerHTML =
+    linha('Dias de treino', `${s.diasTreino} / ${cfg.metaTreinos}`, s.diasTreino >= cfg.metaTreinos) +
+    linha('Conversas novas', `${s.conversas} / ${cfg.metaConversas}`, s.conversas >= cfg.metaConversas) +
+    linha('Refeições registadas', `${s.refeicoes} em ${s.diasRef} dia(s)`) +
+    (s.proteinaDia !== null ? linha('Proteína por dia (aprox.)', s.proteinaDia + ' g') : '') +
+    (s.passosDia !== null ? linha('Passos por dia (relógio)', s.passosDia.toLocaleString('pt-PT')) : '') +
+    (s.peso ? linha('Último peso', `${s.peso.valor} kg · ${dm(s.peso.data)}`) : '') +
+    (s.cintura ? linha('Última cintura', `${s.cintura.valor} cm · ${dm(s.cintura.data)}`) : '');
+  $('#sem-nota').textContent = `Semana desde segunda ${s.ini.split('-').reverse().join('/')}. Estimativas de comida são aproximadas.`;
+  const vis = regs.filter(r => r.estado !== 'apagado').slice(0, 60);
+  $('#lista').innerHTML = vis.length ? vis.map(r => `
+    <div class="reg" data-id="${esc(r.id)}"><div><div>${esc(titulo(r))}</div>
+    <div class="d">${esc(dm(r.data))} ${esc(r.hora || '')} · ${esc(NOMES[r.tipo] || 'Relógio')}${r.origem === 'foto' ? ` · <span class="x">foto, confiança ${esc(CONF[r.confianca] || r.confianca)}</span>` : ''}</div></div>
+    <div class="v">${esc(valor(r))}</div></div>`).join('') : '<div class="vazio">Sem registos ainda</div>';
+  $('#lista').querySelectorAll('.reg').forEach(d => d.onclick = () => abrirEdicao(regs.find(r => r.id === d.dataset.id)));
+}
+function titulo(r) {
+  if (r.tipo === 'refeicao') return `${r.item}: ${r.descricao}`;
+  if (r.tipo === 'social') return 'Conversa nova' + (r.descricao ? ` · ${r.descricao}` : '');
+  return r.item + (r.descricao ? ` · ${r.descricao}` : '');
+}
+function valor(r) {
+  if (r.tipo === 'treino') return r.reps !== '' && r.reps != null ? `${r.series || 1}×${r.reps}` : `${r.duracao_min} min`;
+  if (r.tipo === 'refeicao') return r.proteina_g !== '' && r.proteina_g != null ? `${r.proteina_g} g prot.` : '';
+  if (r.tipo === 'medida' || r.tipo === 'saude') return `${r.valor} ${r.unidade || ''}`.trim();
+  return '+1';
+}
+
+/* ---------- corrigir / apagar ---------- */
+function abrirEdicao(r) {
+  if (!r) return;
+  const box = $('#edit-c');
+  const fechar = () => $('#edit').classList.remove('on');
+  $('#edit').classList.add('on');
+  if (r.tipo === 'saude') {
+    box.innerHTML = `<p>${esc(titulo(r))}: ${esc(valor(r))}</p><p class="hint">Vem do relógio (Mi Fitness): corrige-se lá.</p><button class="btn sec b-fechar">Fechar</button>`;
+    box.querySelector('.b-fechar').onclick = fechar;
+    return;
+  }
+  const ler = formulario(box, r.tipo, r, null, '<div class="row"><button class="btn neg b-apagar">Apagar</button><button class="btn b-corr">Guardar</button></div><button class="btn sec b-fechar">Cancelar</button>');
+  box.querySelector('.b-fechar').onclick = fechar;
+  box.querySelector('.b-corr').onclick = () => {
+    const o = ler(); if (!o) return;
+    Object.assign(r, o, r.origem === 'foto' ? { confianca: 'corrigido' } : {}); ls.set('cache', regs);
+    guardar({ acao: 'corrigir', id: r.id, reg: o }); pintarSemana(); fechar(); toast('Corrigido ✓');
+  };
+  box.querySelector('.b-apagar').onclick = () => {
+    if (!confirm('Apagar este registo?')) return;
+    r.estado = 'apagado'; ls.set('cache', regs);
+    guardar({ acao: 'apagar', id: r.id }); pintarSemana(); fechar(); toast('Apagado');
+  };
+}
+$('#edit').onclick = e => { if (e.target.id === 'edit') $('#edit').classList.remove('on'); };
+
+/* ---------- carregar do servidor ---------- */
+async function carregar(aviso) {
+  if (!cfg.url) { if (aviso) toast('Configura o GAS em Definições'); return; }
+  try {
+    await enviarFila();
+    const j = await apiGet();
+    const pend = new Set(fila.map(p => p.id || (p.reg && p.reg.id)));
+    regs = [...regs.filter(r => pend.has(r.id)), ...j.registos.filter(r => !pend.has(r.id))]; // o que ainda não saiu continua visível
+    ls.set('cache', regs); pintarSemana();
+    if (aviso) toast('Actualizado');
+  } catch (e) { if (aviso) toast('Sem ligação: ' + e.message); }
+}
+
+/* ---------- definições ---------- */
+const lista = v => v.split(',').map(s => s.trim()).filter(Boolean);
+function abrirDef() {
+  $('#d-url').value = cfg.url; $('#d-tok').value = cfg.token;
+  $('#d-ex').value = cfg.ex.join(', '); $('#d-med').value = cfg.med.join(', ');
+  $('#d-mt').value = cfg.metaTreinos; $('#d-mc').value = cfg.metaConversas;
+}
+function guardarDef() {
+  cfg = Object.assign(cfg, {
+    url: $('#d-url').value.trim(), token: $('#d-tok').value.trim(),
+    ex: lista($('#d-ex').value), med: lista($('#d-med').value),
+    metaTreinos: num($('#d-mt').value) || DEF.metaTreinos, metaConversas: num($('#d-mc').value) || DEF.metaConversas
+  });
+  ls.set('cfg', cfg); montar(); toast('Guardado'); carregar();
+}
+async function testar() {
+  guardarDef();
+  try { await apiGet(); toast('Ligação OK ✓'); } catch (e) { toast('Falhou: ' + e.message); }
+}
+
+/* ---------- navegação ---------- */
+function ir(v) {
+  document.querySelectorAll('.view').forEach(x => x.classList.toggle('on', x.id === 'v-' + v));
+  document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x.dataset.v === v));
+  if (v === 'def') abrirDef();
+  if (v === 'sem') { pintarSemana(); carregar(); }
+  scrollTo(0, 0);
+}
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => ir(b.dataset.v));
+function rede() {
+  const on = navigator.onLine;
+  $('#net').classList.toggle('off', !on); $('#net span').textContent = on ? 'online' : 'offline';
+  if (on) enviarFila();
+}
+addEventListener('online', rede); addEventListener('offline', rede);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) carregar(); });
+
+/* ---------- arranque ---------- */
+pintarTipos(); montar(); pintarSemana(); rede();
+if (!cfg.url) ir('def'); else carregar();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
