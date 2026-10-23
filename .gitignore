@@ -11,3 +11,4 @@ saude/
 gas/_definir.gs
 termux/config.sh
 termux/.passos*
+termux/djazz-config.sh
