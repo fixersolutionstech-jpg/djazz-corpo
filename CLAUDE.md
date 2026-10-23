@@ -35,4 +35,5 @@ ponte.py sincronizar (tarefa diária) → The DJAZZ\Corpo\Corpo.xlsx + Resumo_se
 - [ ] `clasp push --force` (bloqueado no terminal do Claude: o Rei corre), Propriedades `TOKEN` (já no `.env`) e `GEMINI_KEY`, `autorizar()`, implementação → URL no `.env` e na PWA
 - [ ] Mi Fitness → Health Connect → exportação CSV (testar app; adaptar `ler_csv_saude` ao formato real)
 - [ ] Tarefa agendada "DJazz ponte" (`sincronizar.cmd`)
-- [ ] `The DJAZZ\CLAUDE.md`: secção Registos a apontar para `Corpo\Resumo_semana.md` (confirmar)
+- [x] `The DJAZZ\CLAUDE.md`: secção "REGISTOS DO CORPO" aponta para `Corpo/Resumo_semana.md` (2026-10-23)
+- [x] Implementação @1 a funcionar (registar/corrigir/apagar/saude/foto + Gemini testados 2026-10-23); `.env` com GAS_URL e TOKEN. Não editar código no editor do Apps Script (o push do PC sobrepõe)
