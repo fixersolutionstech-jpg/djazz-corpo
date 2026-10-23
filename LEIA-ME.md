@@ -26,4 +26,4 @@
 2. Cria `~/djazz/config.sh` com `GAS_URL` e `GAS_TOKEN` do DJazz (modelo em `termux/config.exemplo.sh`).
 3. Definições do Android → Apps → Termux:API → Permissões → **Actividade física** → Permitir.
 4. Testa: `termux-sensor -s step_counter -n 1` (anda uns passos) e depois `bash ~/djazz/passos-djazz.sh` duas vezes, com passos pelo meio.
-5. Agenda: `termux-job-scheduler --job-id 1 --script ~/djazz/passos-djazz.sh --period-ms 900000 --persisted true` (o Job 0 é o dos SMS do Organic).
+5. Agenda: `termux-job-scheduler --job-id 1 --script ~/djazz/passos-djazz.sh --period-ms 3600000 --persisted true` (o Job 0 é o dos SMS do Organic).

@@ -1,8 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # passos-djazz.sh — lê o contador de passos do telemóvel e envia o total do dia ao GAS do DJazz Corpo.
 # Requer no Termux: pkg install termux-api jq curl  (+ app Termux:API com a permissão "Actividade física")
-# Corre de 15 em 15 min, numa tarefa própria (o Job 0 é o dos SMS do Organic):
-#   termux-job-scheduler --job-id 1 --script ~/djazz/passos-djazz.sh --period-ms 900000 --persisted true
+# Corre de hora a hora, numa tarefa própria (o Job 0 é o dos SMS do Organic):
+#   termux-job-scheduler --job-id 1 --script ~/djazz/passos-djazz.sh --period-ms 3600000 --persisted true
 # O contador do hardware conta desde que o telemóvel ligou e volta a 0 ao reiniciar:
 # guardamos a última leitura e somamos só a diferença ao total do dia.
 
