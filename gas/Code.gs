@@ -13,6 +13,7 @@
  * 5. Implementar → Nova implementação → Aplicação Web (Executar como: Eu | Acesso: Qualquer pessoa).
  */
 
+const VERSAO = '1.1';
 const SHEET = 'Registos';
 const PASTA_FOTOS = 'DJazz — fotos da comida'; // pasta privada no Drive de quem implementa
 const TIPOS = ['treino', 'refeicao', 'medida', 'social', 'saude'];
@@ -91,8 +92,9 @@ function doGet(e) {
   const p = (e && e.parameter) || {};
   if (!auth_(p.token)) return out_({ ok: false, erro: 'token inválido' });
   if (p.acao === 'listar') return out_(listar_(Number(p.dias) || 14));
+  if (p.acao === 'estado') return out_({ ok: true, versao: VERSAO, gemini: !!prop_('GEMINI_KEY'), modelo: prop_('GEMINI_MODELO') || 'gemini-2.5-flash' }); // diagnóstico, sem valores
   if (p.acao === 'todos') return out_({ ok: true, registos: linhas_() }); // inclui apagados: a ponte precisa deles
-  return out_({ ok: true, servico: 'djazz-corpo' });
+  return out_({ ok: true, servico: 'djazz-corpo', versao: VERSAO });
 }
 
 function doPost(e) {
