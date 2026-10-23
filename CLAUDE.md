@@ -30,8 +30,9 @@ ponte.py sincronizar (tarefa diária) → The DJAZZ\Corpo\Corpo.xlsx + Resumo_se
 
 ## Estado (2026-10-23)
 - [x] Código local: GAS, PWA, ponte, testes (verdes), ícones
-- [ ] Repositório GitHub + Pages (confirmar com o Rei)
-- [ ] Sheet + clasp + Propriedades (TOKEN, GEMINI_KEY) + implementação
+- [x] Repositório público `fixersolutionstech-jpg/djazz-corpo` + Pages: https://fixersolutionstech-jpg.github.io/djazz-corpo/ (2026-10-23)
+- [x] Sheet "DJazz — Corpo" + script ligado criados com `clasp create-script` (`.clasp.json` local; o clasp substitui `gas/appsscript.json` ao criar: repor do Git)
+- [ ] `clasp push --force` (bloqueado no terminal do Claude: o Rei corre), Propriedades `TOKEN` (já no `.env`) e `GEMINI_KEY`, `autorizar()`, implementação → URL no `.env` e na PWA
 - [ ] Mi Fitness → Health Connect → exportação CSV (testar app; adaptar `ler_csv_saude` ao formato real)
 - [ ] Tarefa agendada "DJazz ponte" (`sincronizar.cmd`)
 - [ ] `The DJAZZ\CLAUDE.md`: secção Registos a apontar para `Corpo\Resumo_semana.md` (confirmar)
