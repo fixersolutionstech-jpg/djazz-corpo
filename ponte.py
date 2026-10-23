@@ -294,7 +294,7 @@ def main(argv):
             sys.exit("CSV sem linhas válidas (cabeçalho esperado: data,hora,item,valor,unidade,duracao_min)")
         for i in range(0, len(regs), 200):
             j = gas(cfg, {"acao": "saude", "regs": regs[i:i + 200]})
-            print(f"Lote {i // 200 + 1}: {j['novos']} novo(s), {j['repetidos']} já existiam")
+            print(f"Lote {i // 200 + 1}: {j['novos']} novo(s), {j['actualizados']} actualizado(s)")
 
 
 if __name__ == "__main__":

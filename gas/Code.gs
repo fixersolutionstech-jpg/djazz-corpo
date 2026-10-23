@@ -152,15 +152,21 @@ function apagar_(id) {
   return { ok: true, id };
 }
 
-/** Lote do relógio (Mi Fitness → Health Connect → exportação). O id vem da origem: repetir não duplica. */
+/** Lote do telemóvel (Termux: passos do dia) ou do relógio. O id é estável (ex.: passos-2026-10-23):
+ *  se já existe, actualiza o valor (os passos do dia sobem ao longo do dia); senão, cria. */
 function saude_(regs) {
-  let novos = 0, repetidos = 0;
+  let novos = 0, actualizados = 0;
   regs.forEach(r => {
-    if (!r.id) throw new Error('registo do relógio sem id');
-    const x = registar_(Object.assign({}, r, { tipo: 'saude', origem: r.origem || 'mifitness' }));
-    x.duplicado ? repetidos++ : novos++;
+    if (!r.id) throw new Error('registo de saúde sem id');
+    if (linha_(r.id)) {
+      corrigir_(r.id, { valor: r.valor, unidade: r.unidade, duracao_min: r.duracao_min, hora: r.hora });
+      actualizados++;
+    } else {
+      registar_(Object.assign({}, r, { tipo: 'saude', origem: r.origem || 'telemovel' }));
+      novos++;
+    }
   });
-  return { ok: true, novos, repetidos };
+  return { ok: true, novos, actualizados };
 }
 
 /** Painel da PWA: registos activos dos últimos N dias. */
