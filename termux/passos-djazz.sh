@@ -11,8 +11,8 @@ source "$DIR/config.sh"                 # GAS_URL, GAS_TOKEN
 EST="$DIR/.passos"                      # "data ultima_leitura total_do_dia"
 ENV="$DIR/.passos_enviado"              # "data total" do último envio com sucesso
 
-# uma leitura; o sensor só responde quando há passos novos, por isso o timeout
-cur=$(timeout 20 termux-sensor -s step_counter -n 1 2>/dev/null | jq -r '[.[] | .values[0]] | first // empty' 2>/dev/null)
+# 3 leituras de 1 em 1 s e fica a última com número: a primeira amostra vem muitas vezes vazia ({}) neste Redmi
+cur=$(timeout 20 termux-sensor -s step_counter -d 1000 -n 3 2>/dev/null | jq -r '.[]? | .values[0]? // empty' 2>/dev/null | tail -1)
 termux-sensor -c >/dev/null 2>&1        # desliga o sensor (senão fica a gastar bateria)
 cur=${cur%.*}
 hoje=$(date +%F)
